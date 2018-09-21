@@ -5,7 +5,23 @@ class Article extends Component {
         super(props);
 
         this.state = {
-            isOpen:true
+            isOpen: props.defaultOpen
+        }
+    }
+
+    componentWillMount() {
+        console.log('will mount Article');
+    }
+
+    componentDidMount() {
+        console.log('mounted Article');
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.defaultOpen !== this.props.defaultOpen) {
+            this.setState({
+                isOpen: nextProps.defaultOpen
+            });
         }
     }
 
