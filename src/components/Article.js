@@ -1,40 +1,16 @@
-import React, {Component} from 'react'
+import React, {PureComponent} from 'react'
 
-class Article extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            isOpen: props.defaultOpen
-        }
-    }
-
-    componentWillMount() {
-        console.log('will mount Article');
-    }
-
-    componentDidMount() {
-        console.log('mounted Article');
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (nextProps.defaultOpen !== this.props.defaultOpen) {
-            this.setState({
-                isOpen: nextProps.defaultOpen
-            });
-        }
-    }
-
+class Article extends PureComponent {
     render() {
-        const {article} = this.props;
-        const body = this.state.isOpen && <section className='card-text'>{article.text}</section>;
+        const {article, isOpen, onButtonClick} = this.props;
+        const body = isOpen && <section className="card-text">{article.text}</section>;
         const style = {width: '50%'};
         return (
             <div className='card mx-auto' style={style}>
                 <div className="card-header">
                     <h2>
                         {article.title}
-                        <button className='btn btn-primary btn-lg float-right' onClick={this.handleClick}>{this.state.isOpen ? 'Opened' : 'Closed'}</button>
+                        <button className='btn btn-primary btn-lg float-right' onClick={onButtonClick}>{isOpen ? 'Opened' : 'Closed'}</button>
                     </h2>
                 </div>
                 <div className="card-body">
@@ -43,12 +19,6 @@ class Article extends Component {
                 </div>
             </div>
         )
-    }
-
-    handleClick = () => {
-        this.setState({
-            isOpen: !this.state.isOpen
-        })
     }
 }
 

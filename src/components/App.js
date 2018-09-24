@@ -1,19 +1,14 @@
 import ArticleList from './ArticleList'
-import React, {Component} from 'react'
+import NewArticleForm from './NewArticleForm'
+import React, {PureComponent} from 'react'
 import  articles from '../fixtures'
 import  'bootstrap/dist/css/bootstrap.css'
 
-class App extends Component {
+class App extends PureComponent {
     state = {
-        reverted: false
+        reverted: false,
+        articles: articles
     };
-
-    constructor(props) {
-        super(props);
-
-    }
-
-
     render() {
         return (
             <div className='container'>
@@ -23,10 +18,14 @@ class App extends Component {
                         <button className='btn' onClick={this.revert}>Revert</button>
                     </h1>
                 </div>
-
-                <ArticleList articles={this.state.reverted ? articles.reverse() : articles}/>
+                <NewArticleForm onAddArticle={this.handleAddArticle} />
+                <ArticleList articles={this.state.reverted ? this.state.articles.slice().reverse() : this.state.articles}/>
             </div>
         )
+    }
+
+    handleAddArticle = () => {
+
     }
 
     revert = () => {
