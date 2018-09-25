@@ -4,7 +4,7 @@ class Article extends PureComponent {
     render() {
         const {article, isOpen, onButtonClick} = this.props;
         const body = isOpen && <section className="card-text">{article.text}</section>;
-        const style = {width: '50%'};
+        const style = {marginBottom: '50px'};
         return (
             <div className='card mx-auto' style={style}>
                 <div className="card-header">
