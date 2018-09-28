@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Microsoft Corporation",
+    "code": "MSFT",
+    "type": "stock"
+  },
+  {
+    "name": "Apple Inc",
+    "code": "AAPL",
+    "type": "stock"
+  },
+  {
+    "name": "General Electric Company",
+    "code": "GE",
+    "type": "stock"
+  },
+  {
+    "name": "S&P 500",
+    "code": "SPX",
+    "type": "index"
+  }
+]

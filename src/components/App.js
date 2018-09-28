@@ -1,56 +1,47 @@
-import ArticleList from './ArticleList'
-import NewArticleForm from './NewArticleForm'
-import React, {PureComponent} from 'react'
-import  'bootstrap/dist/css/bootstrap.css'
+import React, { PureComponent } from 'react'
+import Chart from './Chart'; // изменили импорт
+import SymbolList from './SymbolList'; // изменили импорт
+import {getChartData, getSymbols} from '../utils';
 
 class App extends PureComponent {
     state = {
-        articles: [],
-        isLoading: true
+        currentSymbol: 'MSFT',
+        symbols: [],
+        chartData: null,
+        isSymbolsLoading: true,
+        isChartLoading: true
     };
     async componentDidMount() {
-        const res = await fetch('/fixtures.json');
-        const articles = await res.json();
-        setTimeout( () => {
-            this.setState({
-                articles:  articles,
-                isLoading: false
-            });
-        }, 1000);
+        const symbols = await getSymbols();
+        const chartData = await getChartData(this.state.currentSymbol);
+        this.setState({
+            symbols:  symbols,
+            isSymbolsLoading: false,
+
+            chartData: chartData,
+            isChartLoading: false
+        });
 
     }
     render() {
-        const {articles, isLoading} = this.state;
+        const {currentSymbol, symbols, chartData, isSymbolsLoading, isChartLoading } = this.state;
+        console.log(chartData);
         return (
-            <div className='container'>
-                <div className='jumbotron'>
-                    <h1 className='display-3'>
-                        App name
-                        <button className='btn' onClick={this.revert}>Revert</button>
-                    </h1>
-                </div>
-                <NewArticleForm onAddArticle={this.handleAddArticle.bind(this)} />
-                {isLoading ? <h4 className='text-center'>Loading ...</h4> : <ArticleList articles={articles}/>}
-
+            <div className="app">
+                <SymbolList symbols={symbols} onSelectSymbol={this.handleSelectSymbol.bind(this)} />
+                {chartData ? <Chart type='hybrid' data={chartData} /> : ''}
 
             </div>
         )
     }
 
-    handleAddArticle = (title, text) => {
-        const idArticle = Math.random().toString().split('.')[1];
-        const newArticle = {id: idArticle, title: title, text: text, date: "2016-06-09T15:03:23.000Z"};
+    handleSelectSymbol = async symbolCode => {
+        const chartData = await getChartData(this.state.currentSymbol);
         this.setState({
-            articles:  [newArticle, ...this.state.articles]
+            chartData: chartData,
+            currentSymbol: symbolCode
         });
     };
-
-    revert = () => {
-        const articles = this.state.articles.slice();
-        this.setState({
-            articles:  articles.reverse()
-        });
-    }
 }
 
-export default App;
+export default App
