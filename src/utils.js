@@ -1,4 +1,4 @@
-import { tsvParse, csvParse } from  "d3-dsv";
+import { tsvParse } from  "d3-dsv";
 import { timeParse } from "d3-time-format";
 
 function parseData(parse) {
@@ -20,8 +20,7 @@ export function getChartData(symbolCode) {
 
     const promiseData = fetch(`/${symbolCode}.tsv`)
         .then(response => response.text())
-        .then(data => {
-            tsvParse(data, parseData(parseDate))});
+        .then(data =>tsvParse(data, parseData(parseDate)));
     return promiseData;
 }
 

@@ -5,8 +5,8 @@
     "type": "stock"
   },
   {
-    "name": "Apple Inc",
-    "code": "AAPL",
+    "name": "Gazprom",
+    "code": "GAZP",
     "type": "stock"
   },
   {
@@ -16,7 +16,7 @@
   },
   {
     "name": "S&P 500",
-    "code": "SPX",
+    "code": "SP500",
     "type": "index"
   }
 ]

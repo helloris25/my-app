@@ -3,25 +3,25 @@ import React from 'react';
 class SymbolList extends React.PureComponent {
     render() {
         const {symbols, currentSymbol} = this.props;
-        console.log(symbols);
+        let xxx = 'list-group-item list-group-item-action';
+        
         const symbolsElements = symbols.map(item =>
-            <li className="list-group-item" key={item.code}>
-                <label htmlFor="">
-                    <input name='symbol' type="radio" value={item.code} onChange={this.handleChange} checked={currentSymbol === item.code} />
-                    {item.name} ({item.code})
-                </label>
-            </li>
+            <button  key={item.code} type="button" className={currentSymbol === item.code ? xxx + ' active' : xxx} value={item.code} onClick={this.handleChange} >
+            {item.name} ({item.code})
+          </button>
+
         );
-        return (
-            <ul className="list-group">
+        return ( 
+            <div className="list-group">
                 {symbolsElements}
-            </ul>
-        );
+            </div>)
     }
 
-    handleChange = (e) => {
-        console.log(this.props)
-        this.props.onSelectSymbol(e.currentTarget.value)
+    handleChange = (e) => {    
+        if (e.currentTarget.value != this.props.currentSymbol ) {
+            this.props.onSelectSymbol(e.currentTarget.value)
+        }
+        
     }
 }
 

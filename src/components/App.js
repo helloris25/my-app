@@ -1,11 +1,12 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import Chart from './Chart'; // изменили импорт
 import SymbolList from './SymbolList'; // изменили импорт
-import {getChartData, getSymbols} from '../utils';
+import { getChartData, getSymbols } from '../utils';
+import Toolbar from './Toolbar';
 
-class App extends PureComponent {
+class App extends React.PureComponent {
     state = {
-        currentSymbol: 'MSFT',
+        currentSymbol: 'SP500',
         symbols: [],
         chartData: null,
         isSymbolsLoading: true,
@@ -15,7 +16,7 @@ class App extends PureComponent {
         const symbols = await getSymbols();
         const chartData = await getChartData(this.state.currentSymbol);
         this.setState({
-            symbols:  symbols,
+            symbols: symbols,
             isSymbolsLoading: false,
 
             chartData: chartData,
@@ -24,23 +25,38 @@ class App extends PureComponent {
 
     }
     render() {
-        const {currentSymbol, symbols, chartData, isSymbolsLoading, isChartLoading } = this.state;
-        console.log(chartData);
-        return (
-            <div className="app">
-                <SymbolList symbols={symbols} onSelectSymbol={this.handleSelectSymbol.bind(this)} />
-                {chartData ? <Chart type='hybrid' data={chartData} /> : ''}
+        const { currentSymbol, symbols, chartData, isSymbolsLoading, isChartLoading } = this.state;
+        console.log(!isChartLoading);
 
+        return (
+            <div className='app'>
+                <Toolbar />
+                <main className='container' role="main">
+                    <div className='row'>
+                        <div className='col-sm-3'>
+                            <SymbolList currentSymbol={currentSymbol} symbols={symbols} onSelectSymbol={this.handleSelectSymbol.bind(this)} />
+                        </div>
+                        <div className='col-sm-9 chart-container'>
+                            {!chartData || isChartLoading ? <div className='spinner'></div> : <Chart type='hybrid' data={chartData} />}
+                        </div>
+
+                    </div>
+                </main>
             </div>
         )
     }
 
     handleSelectSymbol = async symbolCode => {
-        const chartData = await getChartData(this.state.currentSymbol);
+        this.setState({
+            isChartLoading: true,
+        });
+        const chartData = await getChartData(symbolCode);
         this.setState({
             chartData: chartData,
-            currentSymbol: symbolCode
+            currentSymbol: symbolCode,
+            isChartLoading: false,
         });
+
     };
 }
 
