@@ -1,16 +1,21 @@
-import React, { Component } from 'react'
+import React from 'react'
 import Chart from './Chart'; // изменили импорт
 import SymbolList from './SymbolList'; // изменили импорт
 import { getChartData, getSymbols } from '../utils';
 import Toolbar from './Toolbar';
+import ChartSeriesSelector from './ChartSeriesSelector';
 
 class App extends React.PureComponent {
     state = {
         currentSymbol: 'SP500',
         symbols: [],
         chartData: null,
+
         isSymbolsLoading: true,
-        isChartLoading: true
+        isChartLoading: true,
+
+        chartSeries: ['line', 'candlestick', 'area'],
+        currentChartSeries: 'candlestick'
     };
     async componentDidMount() {
         const symbols = await getSymbols();
@@ -25,25 +30,36 @@ class App extends React.PureComponent {
 
     }
     render() {
-        const { currentSymbol, symbols, chartData, isSymbolsLoading, isChartLoading } = this.state;
-        console.log(!isChartLoading);
+        const {currentChartSeries, currentSymbol, symbols, chartData, isChartLoading, chartSeries } = this.state;
 
         return (
             <div className='app'>
                 <Toolbar />
-                <main className='container' role="main">
+                <main className='container' role='main'>
                     <div className='row'>
                         <div className='col-sm-3'>
                             <SymbolList currentSymbol={currentSymbol} symbols={symbols} onSelectSymbol={this.handleSelectSymbol.bind(this)} />
                         </div>
-                        <div className='col-sm-9 chart-container'>
-                            {!chartData || isChartLoading ? <div className='spinner'></div> : <Chart type='hybrid' data={chartData} />}
+                        <div className='col-sm-9'>
+                            <div className='col-sm-3 pl-0'>
+                                <ChartSeriesSelector onSelectChartSeries={this.onSelectChartSeries.bind(this)} currentChartSeries={currentChartSeries} chartSeries={chartSeries} />
+                            </div>
+                            <div className='chart-container'>
+                                {!chartData || isChartLoading ? <div className='spinner'></div> : <Chart seriesType={currentChartSeries} type='hybrid' data={chartData} currentSymbol={currentSymbol} />}
+                            </div>
                         </div>
 
                     </div>
                 </main>
             </div>
         )
+    }
+
+    onSelectChartSeries(series) {
+        console.log(series);
+        this.setState({
+            currentChartSeries: series,
+        });
     }
 
     handleSelectSymbol = async symbolCode => {
